@@ -1,26 +1,11 @@
 // API Configuration
 const getBaseUrl = () => {
-  // Try to get the server URL dynamically
-  if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol;
-    const hostname = window.location.hostname;
-    const port = window.location.port;
-    
-    // If we're on port 3000 (frontend), assume backend is on 5000
-    if (port === '3000') {
-      return `${protocol}//${hostname}:5000`;
-    }
-    
-    // For production or different setups, you might want to use environment variables
-    if (process.env.REACT_APP_API_URL) {
-      return process.env.REACT_APP_API_URL;
-    }
-    
-    // Default fallback
-    return `${protocol}//${hostname}:5000`;
+  // Use production backend URL if available
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
   }
-  
-  return 'http://localhost:5000';
+  // Use Render deployment URL as default for production
+  return "https://workflow-manger-1.onrender.com";
 };
 
 export const API_BASE_URL = getBaseUrl();
@@ -36,7 +21,7 @@ export const apiCall = async (endpoint, options = {}) => {
     },
     ...options,
   };
-  
+
   try {
     const response = await fetch(url, config);
     return response;
